@@ -1,0 +1,15 @@
+{
+  "name": "type-forge",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Gustavo Velazquez",
+  "license": "ISC",
+  "description": "Decorators for creating resolvers in Forge apps",
+  "peerDependencies": {
+    "@forge/resolver": ">=1.6.0 <2.0.0"
+  }
+}
