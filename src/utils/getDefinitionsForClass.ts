@@ -1,7 +1,8 @@
 import ForgeResolver from "@forge/resolver";
 import _ from "../constants";
+import { DefinitionsHandler } from "@/types";
 
-export function getDefinitionsForClass(...classes: any[]) {
+export function getDefinitionsForClass(...classes: any[]): DefinitionsHandler {
   const forgeResolver = new ForgeResolver();
 
   for (const ResolverClass of classes) {

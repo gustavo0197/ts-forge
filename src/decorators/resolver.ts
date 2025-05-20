@@ -2,15 +2,19 @@ import { ResolverConfig } from "../types";
 import _ from "../constants";
 
 /**
- * Resolver decorator for defining resolvers.
+ * Decorator for defining forge resolvers.
  * @param ResolverConfig - Configuration object for the resolver.
- * @returns any - A function that takes a constructor as an argument.
+ * @param ResolverConfig.middlewares - Array of middleware functions to be applied to the resolver functions.
+ * @param ResolverConfig.errorHandler - Custom error handler function for the resolver functions.
+ * @returns A modified class with resolver configuration.
+ *
  * @example
- * ```typescript
- * @Resolver()
- * class MyResolver {
- *   // ...
- * }
+ * ```ts
+ * \@Resolver({
+ *   middlewares: [myMiddleware],
+ *   errorHandler: myErrorHandler,
+ * })
+ * class MyResolver{}
  * ```
  */
 export function Resolver(config: ResolverConfig = {}) {

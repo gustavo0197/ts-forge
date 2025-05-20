@@ -1,9 +1,11 @@
 {
   "name": "type-forge",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsc -p ./tsconfig.json --watch",
+    "build": "eval $(rm -r dist) && tsc -p ./tsconfig.json"
   },
   "keywords": [],
   "author": "Gustavo Velazquez",
@@ -11,5 +13,9 @@
   "description": "Decorators for creating resolvers in Forge apps",
   "peerDependencies": {
     "@forge/resolver": ">=1.6.0 <2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "5.8.3",
+    "vitest": "^3.1.4"
   }
 }
