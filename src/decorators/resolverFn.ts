@@ -2,8 +2,22 @@ import { Request } from "@forge/resolver";
 import { ResolverFnConfig } from "../types";
 import _ from "../constants";
 
-export function ResolverFn(config: ResolverFnConfig) {
+function isResolverFnConfig(config: ResolverFnConfig | string): config is ResolverFnConfig {
+  return (
+    typeof config === "object" &&
+    typeof config.key === "string" &&
+    (typeof config.middlewares === "undefined" || Array.isArray(config.middlewares)) &&
+    (typeof config.errorHandler === "undefined" || typeof config.errorHandler === "function")
+  );
+}
+
+export function ResolverFn(resolverFnConfig: ResolverFnConfig | string) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    // Handle the case where resolverFnConfig is a string
+    const config: ResolverFnConfig = isResolverFnConfig(resolverFnConfig)
+      ? resolverFnConfig
+      : { key: resolverFnConfig, middlewares: [], errorHandler: undefined };
+
     // Check if the target has the resolverNames symbol
     if (!target[_.RESOLVER_NAMES]) {
       target[_.RESOLVER_NAMES] = [];
