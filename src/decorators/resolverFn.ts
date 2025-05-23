@@ -18,6 +18,11 @@ export function ResolverFn(resolverFnConfig: ResolverFnConfig | string) {
       ? resolverFnConfig
       : { key: resolverFnConfig, middlewares: [], errorHandler: undefined };
 
+    // If the middlewares property is not an array, initialize it as an empty array
+    if (!Array.isArray(config.middlewares)) {
+      config.middlewares = [];
+    }
+
     // Check if the target has the resolverNames symbol
     if (!target[_.RESOLVER_NAMES]) {
       target[_.RESOLVER_NAMES] = [];

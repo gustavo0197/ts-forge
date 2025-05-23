@@ -24,3 +24,8 @@ export interface ResolverFnConfig {
   middlewares?: MiddlewareFn[];
   errorHandler?: ErrorHandlerFn;
 }
+
+export interface TargetResolverFnConfig {
+  config: ResolverFnConfig;
+  methodName: string;
+}
