@@ -71,9 +71,9 @@ export function ResolverFn(resolverFnConfig: ResolverFnConfig | string) {
             };
 
             return await errorHandlerFn(error, req);
-          } catch (error) {
+          } catch (err) {
             // If the error handler throws an error, log it and return the original error
-            console.error(error);
+            console.error(err);
 
             return error;
           }
