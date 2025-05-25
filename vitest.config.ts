@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
     mode,
     resolve: {
       alias: {
+        "@/index": resolve(__dirname, "src/index"),
         "@/constants": resolve(__dirname, "src/constants"),
         "@/decorators": resolve(__dirname, "src/decorators"),
         "@/types": resolve(__dirname, "src/types")

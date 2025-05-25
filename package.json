@@ -5,10 +5,15 @@
   "scripts": {
     "test": "vitest --run",
     "test:watch": "vitest",
+    "test:coverage": "vitest --run --coverage",
     "dev": "tsc -p ./tsconfig.json --watch",
     "build": "eval $(rm -r dist) && tsc -p ./tsconfig.json"
   },
-  "keywords": [],
+  "keywords": [
+    "forge",
+    "atlassian",
+    "addon"
+  ],
   "author": "Gustavo Velazquez",
   "license": "ISC",
   "description": "Decorators for creating resolvers in Forge apps",
@@ -16,6 +21,7 @@
     "@forge/resolver": ">=1.6.0 <2.0.0"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "3.1.4",
     "jsdom": "^26.1.0",
     "typescript": "5.8.3",
     "vitest": "^3.1.4"

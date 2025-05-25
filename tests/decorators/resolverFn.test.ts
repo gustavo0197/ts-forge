@@ -1,10 +1,19 @@
-import { describe, test, expect, vi } from "vitest";
-import { ResolverFn } from "@/decorators/resolverFn";
-import { Resolver } from "@/decorators/resolver";
+import { describe, test, expect, vi, beforeEach } from "vitest";
+import { Resolver, ResolverFn } from "@/index";
 import { TargetResolverFnConfig } from "@/types";
 import _ from "@/constants";
 
+const mockError = vi.fn();
+
+vi.stubGlobal("console", {
+  error: mockError
+});
+
 describe("@Resolver()", () => {
+  beforeEach(() => {
+    mockError.mockReset();
+  });
+
   test("Instance should have resolver function config", () => {
     const resolverKey1 = "testing-resolver";
     const resolverKey2: string = "testing-resolver-2";
@@ -112,149 +121,234 @@ describe("@Resolver()", () => {
     ]);
   });
 
-  test("Should run resolver function middlewares", async () => {
-    const req = { context: { project: { id: "1234" } } };
-    const resolverKey: string = "testing-resolver";
-    const resolverMethodName: string = "testMethod";
-    const resolverFnResult = { message: "Hello world!" };
+  describe("Middlewares", () => {
+    test("Should run resolver function middlewares", async () => {
+      const req = { context: { project: { id: "1234" } } };
+      const resolverKey: string = "testing-resolver";
+      const resolverMethodName: string = "testMethod";
+      const resolverFnResult = { message: "Hello world!" };
 
-    const middleware1 = vi.fn();
-    const middleware2 = vi.fn();
+      const middleware1 = vi.fn();
+      const middleware2 = vi.fn();
 
-    @Resolver()
-    class TestResolver {
-      @ResolverFn({
-        key: resolverKey,
-        middlewares: [middleware1, middleware2]
-      })
-      async [resolverMethodName](req: any) {
-        return resolverFnResult;
+      @Resolver()
+      class TestResolver {
+        @ResolverFn({
+          key: resolverKey,
+          middlewares: [middleware1, middleware2]
+        })
+        async [resolverMethodName](req: any) {
+          return resolverFnResult;
+        }
       }
-    }
 
-    const instance = new TestResolver();
+      const instance = new TestResolver();
 
-    const result = await instance[resolverMethodName](req);
+      const result = await instance[resolverMethodName](req);
 
-    expect(middleware1).toHaveBeenCalledTimes(1);
-    expect(middleware2).toHaveBeenCalledTimes(1);
+      expect(middleware1).toHaveBeenCalledTimes(1);
+      expect(middleware2).toHaveBeenCalledTimes(1);
 
-    expect(middleware1).toHaveBeenCalledWith(req);
-    expect(middleware2).toHaveBeenCalledWith(req);
+      expect(middleware1).toHaveBeenCalledWith(req);
+      expect(middleware2).toHaveBeenCalledWith(req);
 
-    expect(result).toBe(resolverFnResult);
-  });
-
-  test("If there are middlewares in the resolver function and the resolver, the resolver function middlewares should be called first", async () => {
-    const req = { context: { project: { id: "1234" } } };
-    const resolverKey: string = "testing-resolver";
-    const resolverMethodName: string = "testMethod";
-    const resolverFnResult = { message: "Hello world!" };
-    const middleware1 = vi.fn();
-    const middleware2 = vi.fn();
-
-    @Resolver({
-      middlewares: [middleware2]
-    })
-    class TestResolver {
-      @ResolverFn({
-        key: resolverKey,
-        middlewares: [middleware1]
-      })
-      async [resolverMethodName](req: any) {
-        return resolverFnResult;
-      }
-    }
-    const instance = new TestResolver();
-    const result = await instance[resolverMethodName](req);
-
-    expect(middleware1).toHaveBeenCalledTimes(1);
-    expect(middleware2).toHaveBeenCalledTimes(1);
-
-    expect(middleware1).toHaveBeenCalledWith(req);
-    expect(middleware2).toHaveBeenCalledWith(req);
-
-    expect(result).toBe(resolverFnResult);
-  });
-
-  test("If the resolver function has an error handler and there is an error, error handler function should be called", async () => {
-    const req = { context: { project: { id: "1234" } } };
-    const resolverKey: string = "testing-resolver";
-    const resolverMethodName: string = "testMethod";
-    const errorHandler = vi.fn();
-    const error = new Error("Test error");
-
-    @Resolver()
-    class TestResolver {
-      @ResolverFn({
-        key: resolverKey,
-        errorHandler
-      })
-      async [resolverMethodName](req: any) {
-        throw error;
-      }
-    }
-
-    const instance = new TestResolver();
-    await instance[resolverMethodName](req);
-
-    expect(errorHandler).toHaveBeenCalledTimes(1);
-    expect(errorHandler).toHaveBeenCalledWith(error, req);
-  });
-
-  test("If the resolver has an error handler and there is an error, error handler function should be called", async () => {
-    const req = { context: { project: { id: "1234" } } };
-    const resolverKey: string = "testing-resolver";
-    const resolverMethodName: string = "testMethod";
-    const errorHandler = vi.fn();
-    const error = new Error("Test error");
-
-    const middleware1 = vi.fn(() => {
-      throw error;
+      expect(result).toBe(resolverFnResult);
     });
 
-    @Resolver({ errorHandler })
-    class TestResolver {
-      @ResolverFn({
-        key: resolverKey,
-        middlewares: [middleware1]
+    test("If there are middlewares in the resolver function and the resolver, the resolver function middlewares should be called first", async () => {
+      const req = { context: { project: { id: "1234" } } };
+      const resolverKey: string = "testing-resolver";
+      const resolverMethodName: string = "testMethod";
+      const resolverFnResult = { message: "Hello world!" };
+      const middleware1 = vi.fn();
+      const middleware2 = vi.fn();
+
+      @Resolver({
+        middlewares: [middleware2]
       })
-      async [resolverMethodName](req: any) {
-        return "test";
+      class TestResolver {
+        @ResolverFn({
+          key: resolverKey,
+          middlewares: [middleware1]
+        })
+        async [resolverMethodName](req: any) {
+          return resolverFnResult;
+        }
       }
-    }
+      const instance = new TestResolver();
+      const result = await instance[resolverMethodName](req);
 
-    const instance = new TestResolver();
-    await instance[resolverMethodName](req);
+      expect(middleware1).toHaveBeenCalledTimes(1);
+      expect(middleware2).toHaveBeenCalledTimes(1);
 
-    expect(errorHandler).toHaveBeenCalledTimes(1);
-    expect(errorHandler).toHaveBeenCalledWith(error, req);
+      expect(middleware1).toHaveBeenCalledWith(req);
+      expect(middleware2).toHaveBeenCalledWith(req);
+
+      expect(result).toBe(resolverFnResult);
+    });
+
+    test("If the middleware function returns a value, the resolver function should not be called", async () => {
+      const req = { context: { project: { id: "1234" } } };
+      const resolverKey: string = "testing-resolver";
+      const resolverMethodName: string = "testMethod";
+      const middlewareError = { ok: false, message: "There has been an error" };
+      const middleware = vi.fn(() => {
+        return middlewareError;
+      });
+
+      @Resolver()
+      class TestResolver {
+        @ResolverFn({
+          key: resolverKey,
+          middlewares: [middleware]
+        })
+        async [resolverMethodName](req: any) {
+          return "test";
+        }
+      }
+
+      const instance = new TestResolver();
+      const result = await instance[resolverMethodName](req);
+
+      expect(middleware).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(middlewareError);
+    });
   });
 
-  test("If there are error handlers in the resolver function and the resolver, the resolver function error handler should be called", async () => {
-    const req = { context: { project: { id: "1234" } } };
-    const resolverKey: string = "testing-resolver";
-    const resolverMethodName: string = "testMethod";
-    const resolverErrorHandler = vi.fn();
-    const resolverFnErrorHandler = vi.fn();
-    const error = new Error("Test error");
+  describe("Error handler", () => {
+    test("If no error handler is provided, should print and return the error", async () => {
+      const req = { context: { project: { id: "1234" } } };
+      const resolverKey: string = "testing-resolver";
+      const resolverMethodName: string = "testMethod";
+      const error = new Error("Test error");
 
-    @Resolver({ errorHandler: resolverErrorHandler })
-    class TestResolver {
-      @ResolverFn({
-        key: resolverKey,
-        errorHandler: resolverFnErrorHandler
-      })
-      async [resolverMethodName](req: any) {
-        throw error;
+      @Resolver()
+      class TestResolver {
+        @ResolverFn({
+          key: resolverKey
+        })
+        async [resolverMethodName](req: any) {
+          throw error;
+        }
       }
-    }
 
-    const instance = new TestResolver();
-    await instance[resolverMethodName](req);
+      const instance = new TestResolver();
+      const result = await instance[resolverMethodName](req);
 
-    expect(resolverErrorHandler).toHaveBeenCalledTimes(0);
-    expect(resolverFnErrorHandler).toHaveBeenCalledTimes(1);
-    expect(resolverFnErrorHandler).toHaveBeenCalledWith(error, req);
+      expect(mockError).toHaveBeenCalledTimes(1);
+      expect(mockError).toHaveBeenCalledWith(error);
+      expect(result).toEqual(error);
+    });
+
+    test("If the resolver function has an error handler and there is an error, error handler function should be called", async () => {
+      const req = { context: { project: { id: "1234" } } };
+      const resolverKey: string = "testing-resolver";
+      const resolverMethodName: string = "testMethod";
+      const errorHandler = vi.fn();
+      const error = new Error("Test error");
+
+      @Resolver()
+      class TestResolver {
+        @ResolverFn({
+          key: resolverKey,
+          errorHandler
+        })
+        async [resolverMethodName](req: any) {
+          throw error;
+        }
+      }
+
+      const instance = new TestResolver();
+      await instance[resolverMethodName](req);
+
+      expect(errorHandler).toHaveBeenCalledTimes(1);
+      expect(errorHandler).toHaveBeenCalledWith(error, req);
+    });
+
+    test("If the resolver has an error handler and there is an error, error handler function should be called", async () => {
+      const req = { context: { project: { id: "1234" } } };
+      const resolverKey: string = "testing-resolver";
+      const resolverMethodName: string = "testMethod";
+      const errorHandler = vi.fn();
+      const error = new Error("Test error");
+
+      const middleware1 = vi.fn(() => {
+        throw error;
+      });
+
+      @Resolver({ errorHandler })
+      class TestResolver {
+        @ResolverFn({
+          key: resolverKey,
+          middlewares: [middleware1]
+        })
+        async [resolverMethodName](req: any) {
+          return "test";
+        }
+      }
+
+      const instance = new TestResolver();
+      await instance[resolverMethodName](req);
+
+      expect(errorHandler).toHaveBeenCalledTimes(1);
+      expect(errorHandler).toHaveBeenCalledWith(error, req);
+    });
+
+    test("If there are error handlers in the resolver function and the resolver, the resolver function error handler should be called", async () => {
+      const req = { context: { project: { id: "1234" } } };
+      const resolverKey: string = "testing-resolver";
+      const resolverMethodName: string = "testMethod";
+      const resolverErrorHandler = vi.fn();
+      const resolverFnErrorHandler = vi.fn();
+      const error = new Error("Test error");
+
+      @Resolver({ errorHandler: resolverErrorHandler })
+      class TestResolver {
+        @ResolverFn({
+          key: resolverKey,
+          errorHandler: resolverFnErrorHandler
+        })
+        async [resolverMethodName](req: any) {
+          throw error;
+        }
+      }
+
+      const instance = new TestResolver();
+      await instance[resolverMethodName](req);
+
+      expect(resolverErrorHandler).toHaveBeenCalledTimes(0);
+      expect(resolverFnErrorHandler).toHaveBeenCalledTimes(1);
+      expect(resolverFnErrorHandler).toHaveBeenCalledWith(error, req);
+    });
+
+    test("If an error is thrown in the error handler, it should be printed and returned", async () => {
+      const req = { context: { project: { id: "1234" } } };
+      const resolverKey: string = "testing-resolver";
+      const resolverMethodName: string = "testMethod";
+      const error = new Error("Error in error handler");
+      const errorHandler = vi.fn(() => {
+        throw error;
+      });
+
+      @Resolver()
+      class TestResolver {
+        @ResolverFn({
+          key: resolverKey,
+          errorHandler
+        })
+        async [resolverMethodName](req: any) {
+          throw error;
+        }
+      }
+
+      const instance = new TestResolver();
+      const result = await instance[resolverMethodName](req);
+
+      expect(mockError).toHaveBeenCalledTimes(1);
+      expect(mockError).toHaveBeenCalledWith(error);
+      expect(result).toEqual(error);
+      expect(errorHandler).toHaveBeenCalledTimes(1);
+      expect(errorHandler).toHaveBeenCalledWith(error, req);
+    });
   });
 });

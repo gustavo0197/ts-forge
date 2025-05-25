@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { Resolver } from "@/decorators/resolver";
+import { Resolver } from "@/index";
 import { ResolverConfig } from "@/types";
 import _ from "@/constants";
 
