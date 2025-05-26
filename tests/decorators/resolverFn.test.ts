@@ -35,7 +35,7 @@ describe("@Resolver()", () => {
 
     const instance = new TestResolver();
 
-    const resolverFnConfig: TargetResolverFnConfig[] = instance[_.RESOLVER_NAMES];
+    const resolverFnConfig: TargetResolverFnConfig[] = instance[_.RESOLVER_FUNCTIONS];
 
     expect(resolverFnConfig).toEqual([
       {
@@ -77,7 +77,7 @@ describe("@Resolver()", () => {
 
     const instance = new TestResolver();
 
-    const resolverFnConfig: TargetResolverFnConfig[] = instance[_.RESOLVER_NAMES];
+    const resolverFnConfig: TargetResolverFnConfig[] = instance[_.RESOLVER_FUNCTIONS];
 
     expect(resolverFnConfig).toEqual([
       {
@@ -107,7 +107,7 @@ describe("@Resolver()", () => {
 
     const instance = new TestResolver();
 
-    const resolverFnConfig: TargetResolverFnConfig[] = instance[_.RESOLVER_NAMES];
+    const resolverFnConfig: TargetResolverFnConfig[] = instance[_.RESOLVER_FUNCTIONS];
 
     expect(resolverFnConfig).toEqual([
       {

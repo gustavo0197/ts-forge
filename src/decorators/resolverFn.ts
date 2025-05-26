@@ -23,13 +23,13 @@ export function ResolverFn(resolverFnConfig: ResolverFnConfig | string) {
       config.middlewares = [];
     }
 
-    // Check if the target has the resolverNames symbol
-    if (!target[_.RESOLVER_NAMES]) {
-      target[_.RESOLVER_NAMES] = [];
+    // Check if the target has the resolverNames property
+    if (!target[_.RESOLVER_FUNCTIONS]) {
+      target[_.RESOLVER_FUNCTIONS] = [];
     }
 
     // Add the resolver's data to the target
-    target[_.RESOLVER_NAMES].push({
+    target[_.RESOLVER_FUNCTIONS].push({
       config,
       methodName: propertyKey
     });
