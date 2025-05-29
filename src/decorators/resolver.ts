@@ -17,8 +17,9 @@ import _ from "../constants";
  * class MyResolver{}
  * ```
  */
-export function Resolver(config: ResolverConfig = {}) {
+export function Resolver(config: ResolverConfig = { middlewares: [], errorHandler: undefined }) {
   return function <T extends { new (...args: any[]): {} }>(constructor: T) {
+    // constructor.prototype[_.RESOLVER_CONFIG] = config;
     constructor.prototype[_.RESOLVER_CONFIG] = config;
   };
 }

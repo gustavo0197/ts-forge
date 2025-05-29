@@ -13,6 +13,10 @@ export function getDefinitionsForClass({
     throw new Error("Middlewares must be an array");
   }
 
+  if (middlewares.length > 0 && !middlewares.every((m) => typeof m === "function")) {
+    throw new Error("All middlewares must be functions");
+  }
+
   if (errorHandler && typeof errorHandler !== "function") {
     throw new Error("Error handler must be a function");
   }
@@ -20,18 +24,15 @@ export function getDefinitionsForClass({
   for (const instance of resolvers) {
     if (instance[_.RESOLVER_CONFIG]) {
       // Set global middlewares and error handler for the resolver class
-      const instanceConfig: ResolverClassConfig = instance[_.RESOLVER_CONFIG];
+      const instanceConfig: ResolverClassConfig = {
+        middlewares: Array.from(instance[_.RESOLVER_CONFIG].middlewares || []),
+        errorHandler: instance[_.RESOLVER_CONFIG].errorHandler
+      };
 
-      if (!Array.isArray(instanceConfig.globalMiddlewares)) {
-        instanceConfig.globalMiddlewares = [];
-      }
+      instanceConfig.globalMiddlewares = Array.from(middlewares);
 
-      instanceConfig.globalMiddlewares.push(...middlewares);
-
-      // If the instance already has an error handler, it will not be overwritten
-      if (!instanceConfig.errorHandler && errorHandler) {
-        instanceConfig.errorHandler = errorHandler;
-      }
+      // Set the global error handler
+      instanceConfig.globalErrorHandler = errorHandler;
 
       // Set the updated config on the instance
       instance[_.RESOLVER_CONFIG] = instanceConfig;

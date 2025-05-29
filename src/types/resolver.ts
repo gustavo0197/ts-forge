@@ -7,6 +7,7 @@ export interface ResolverConfig {
 
 export interface ResolverClassConfig extends ResolverConfig {
   globalMiddlewares?: MiddlewareFn[];
+  globalErrorHandler?: ErrorHandlerFn;
 }
 
 export type MiddlewareFn = (req: Request) => Promise<any> | any;

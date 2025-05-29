@@ -1,5 +1,5 @@
 import { Request } from "@forge/resolver";
-import { ResolverFnConfig } from "../types";
+import { ResolverFnConfig, ResolverClassConfig } from "../types";
 import _ from "../constants";
 
 function isResolverFnConfig(config: ResolverFnConfig | string): config is ResolverFnConfig {
@@ -37,11 +37,22 @@ export function ResolverFn(resolverFnConfig: ResolverFnConfig | string) {
     const method = descriptor.value;
 
     descriptor.value = async function (req: Request) {
+      const targetConfig: ResolverClassConfig = this[_.RESOLVER_CONFIG] || {};
+
       try {
         // Merge middlewares from the resolver function and the resolver class
         // Method middlewares are always executed first
-        const middlewares = config.middlewares || [];
-        middlewares.push(...(target[_.RESOLVER_CONFIG]?.middlewares || []));
+        const middlewares = Array.from(config.middlewares || []);
+
+        // If there are middlewares defined in the resolver class, add them to the middlewares array
+        if (Array.isArray(targetConfig.middlewares)) {
+          middlewares.push(...targetConfig.middlewares);
+        }
+
+        // If there are middlewares defined in the getDefinitionsForClass config, add them to the middlewares array
+        if (Array.isArray(targetConfig.globalMiddlewares)) {
+          middlewares.push(...targetConfig.globalMiddlewares);
+        }
 
         // Run provided middlewares
         for (const middleware of middlewares) {
@@ -58,7 +69,7 @@ export function ResolverFn(resolverFnConfig: ResolverFnConfig | string) {
         return await method.call(this, req);
       } catch (error) {
         // Resolver function error handler has priority over the resolver error handler
-        const errorHandlerFn = config.errorHandler || target[_.RESOLVER_CONFIG]?.errorHandler;
+        const errorHandlerFn = config.errorHandler || targetConfig?.errorHandler;
 
         // If an error handler is provided, call it with the request data and error object
         // This allows the error handler to handle the error and return a response
