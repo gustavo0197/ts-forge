@@ -4,14 +4,17 @@ import { ResolverConfig } from "@/types";
 import _ from "@/constants";
 
 describe("@Resolver()", () => {
-  test("Config must be empty if @Resolver was called without arguments", () => {
+  test("If @Resolver was called without arguments, middlewares should be an empty array", () => {
     @Resolver()
     class TestResolver {}
 
     const instance: TestResolver = new TestResolver();
     const config = instance[_.RESOLVER_CONFIG];
 
-    expect(config).toEqual({});
+    expect(config).toEqual({
+      middlewares: [],
+      errorHandler: undefined
+    });
   });
 
   test("Config must be empty if @Resolver was called with empty object", () => {
@@ -21,7 +24,7 @@ describe("@Resolver()", () => {
     const instance: TestResolver = new TestResolver();
     const config = instance[_.RESOLVER_CONFIG];
 
-    expect(config).toEqual({});
+    expect(config).toEqual({ middlewares: [], errorHandler: undefined });
   });
 
   test("Config must have middlewares if @Resolver was called with middlewares", () => {
@@ -54,7 +57,7 @@ describe("@Resolver()", () => {
     const instance: TestResolver = new TestResolver();
     const config = instance[_.RESOLVER_CONFIG];
 
-    expect(config).toEqual({ errorHandler });
+    expect(config).toEqual({ middlewares: [], errorHandler });
   });
 
   test("Config must have middlewares and errorHandler if @Resolver was called with both", () => {

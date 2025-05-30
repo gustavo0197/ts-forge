@@ -69,7 +69,8 @@ export function ResolverFn(resolverFnConfig: ResolverFnConfig | string) {
         return await method.call(this, req);
       } catch (error) {
         // Resolver function error handler has priority over the resolver error handler
-        const errorHandlerFn = config.errorHandler || targetConfig?.errorHandler;
+        const errorHandlerFn =
+          config.errorHandler || targetConfig?.errorHandler || targetConfig?.globalErrorHandler;
 
         // If an error handler is provided, call it with the request data and error object
         // This allows the error handler to handle the error and return a response
