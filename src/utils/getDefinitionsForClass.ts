@@ -2,6 +2,14 @@ import ForgeResolver from "@forge/resolver";
 import _ from "../constants";
 import { DefinitionsHandler, GetDefinitionsForClassParams, ResolverClassConfig } from "@/types";
 
+/**
+ * Get definitions for the provided resolvers
+ * @param config - Config
+ * @param config.resolvers - Array of resolvers
+ * @param config.middlewares - Array of middlewares to be applied to the provided resolvers
+ * @param config.errorHandler - Custom error handler to be applied to the provided resolvers
+ * @returns - Resolver definitions
+ */
 export function getDefinitionsForClass({
   resolvers,
   middlewares = [],

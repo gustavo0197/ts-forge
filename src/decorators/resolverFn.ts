@@ -1,16 +1,15 @@
 import { Request } from "@forge/resolver";
-import { ResolverFnConfig, ResolverClassConfig } from "../types";
+import { ResolverFnConfig, ResolverClassConfig, RequestError } from "../types";
+import isResolverFnConfig from "../utils/isResolverFnConfig";
 import _ from "../constants";
 
-function isResolverFnConfig(config: ResolverFnConfig | string): config is ResolverFnConfig {
-  return (
-    typeof config === "object" &&
-    typeof config.key === "string" &&
-    (typeof config.middlewares === "undefined" || Array.isArray(config.middlewares)) &&
-    (typeof config.errorHandler === "undefined" || typeof config.errorHandler === "function")
-  );
-}
-
+/**
+ * Define a resolver function
+ * @param resolverFnConfig - Resolver function config
+ * @param resolverFnConfig.middlewares - Array of middleware functions to be applied to this resolver function
+ * @param resolverFnConfig.errorHandler - Custom error handler function for this resolver function
+ * @returns - Response
+ */
 export function ResolverFn(resolverFnConfig: ResolverFnConfig | string) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     // Handle the case where resolverFnConfig is a string
@@ -82,7 +81,7 @@ export function ResolverFn(resolverFnConfig: ResolverFnConfig | string) {
               methodName: propertyKey
             };
 
-            return await errorHandlerFn(error, req);
+            return await errorHandlerFn(error, req as RequestError);
           } catch (err) {
             // If the error handler throws an error, log it and return the original error
             console.error(err);
