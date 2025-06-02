@@ -8,7 +8,12 @@
     "test:watch": "vitest",
     "test:coverage": "vitest --run --coverage",
     "dev": "tsc -p ./tsconfig.json --watch",
-    "build": "eval $(rm -r dist) && tsc -p ./tsconfig.json"
+    "build": "eval $(rm -r dist) && tsc -p ./tsconfig.json",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/gustavo0197/type-forge"
   },
   "keywords": [
     "forge",
@@ -17,7 +22,7 @@
   ],
   "author": "Gustavo Velazquez",
   "license": "ISC",
-  "description": "Decorators for creating resolvers in Forge apps",
+  "description": "Decorators for creating resolvers in Atlassian's Forge addons",
   "peerDependencies": {
     "@forge/resolver": ">=1.6.0 <2.0.0"
   },

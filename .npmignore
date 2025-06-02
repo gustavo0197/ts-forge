@@ -1,4 +1,7 @@
+.prettierrc
+tsconfig.json
+vitest.config.ts
+
 src
 tests
-.prettierrc
 node_modules

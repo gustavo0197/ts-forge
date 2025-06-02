@@ -1,3 +1,5 @@
+**Warning:** The first version of this library is ready, however documentation is still in progress
+
 ## @Resolver
 
 ```ts
@@ -222,3 +224,5 @@ const definitions = getDefinitionsForClass({
 ```
 
 ## Error handler
+
+An error handler is a function that is called when an error is thrown in a resolver function

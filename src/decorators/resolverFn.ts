@@ -11,7 +11,7 @@ import _ from "../constants";
  * @returns - Response
  */
 export function ResolverFn(resolverFnConfig: ResolverFnConfig | string) {
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (target: any, propertyKey: string, descriptor: any) {
     // Handle the case where resolverFnConfig is a string
     const config: ResolverFnConfig = isResolverFnConfig(resolverFnConfig)
       ? resolverFnConfig
