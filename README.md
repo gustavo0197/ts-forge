@@ -3,7 +3,7 @@
 ## @Resolver
 
 ```ts
-import { Resolver, ResolverFn } from "type-forge";
+import { Resolver, ResolverFn } from "ts-forge";
 
 @Resolver({
   middlewares: [authMiddleware, adminMiddleware],
@@ -28,7 +28,7 @@ Parameter 1 (Resolver config) - Optional
 
 ```ts
 import { Request } from "@forge/resolver";
-import { Resolver, ResolverFn } from "type-forge";
+import { Resolver, ResolverFn } from "ts-forge";
 
 @Resolver()
 class HelloWorldResolver {
@@ -95,7 +95,7 @@ class HelloWorldResolver {
 This function is used to get definitions of the resolvers that you created, it uses `@forge/resolver` under the hood to define resolvers then calls `getDefinitions()` method and returns its result
 
 ```ts
-import { getDefinitionsForClass } from "type-forge";
+import { getDefinitionsForClass } from "ts-forge";
 
 getDefinitionsForClass({
   resolvers: [HelloWorldResolver, GetJiraProjectResolver],
