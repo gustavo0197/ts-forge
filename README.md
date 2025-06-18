@@ -225,4 +225,99 @@ const definitions = getDefinitionsForClass({
 
 ## Error handler
 
-An error handler is a function that is called when an error is thrown in a resolver function
+An error handler is a function that allows you to handle errors thrown in your resolver functions or middlewares. It can be defined in `@ResolverFn()`, `@Resolver()` and `getDefinitionsForClass()`.
+
+When an error is thrown, the error handler will be called with the error and the request object, allowing you to handle the error and return a response to the frontend.
+
+When an error is thrown, the error handler will be called in the following order:
+
+1. If an error handler is defined in the `@ResolverFn()` decorator, it will be called
+2. Error handler defined in `@Resolver()`, will be called when an error handler was not defined in `@ResolverFn()`
+3. If no error handler was defined in `@ResolverFn()` and `@Resolver()`, the error handler defined in `getDefinitionsForClass()` will be called
+4. If no error handler was defined in any of the above, the error will be logged to the console and will be returned to the frontend
+
+#### Usage
+
+This is an example of an error handler function
+
+```ts
+import { Request } from "@forge/resolver";
+
+function myErrorHandler(error: any, request: Request): any | Promise<any> {
+  // Handle the error and return a response
+  console.error("An error occurred:", error);
+
+  return { status: "error", message: "An error occurred" };
+}
+```
+
+Then you can use this error handler in `@ResolverFn()`, `@Resolver()` or `getDefinitionsForClass()`
+In the following example the `myErrorHandler` error handler is used in `@ResolverFn()`. This is useful when you want certain error handler to be called for some resolver functions
+
+```ts
+@Resolver()
+class HelloWorldResolver {
+  @ResolverFn({
+    key: "hello-world",
+    errorHandler: myErrorHandler
+  })
+  async helloWorld() {
+    // Do whatever this resolver should do
+  }
+
+  // myErrorHandler won't be called when an error is thrown in this resolver function
+  @ResolverFn("get-current-user")
+  async getCurrentUser() {
+    // Return current user
+  }
+}
+```
+
+In this example the `myErrorHandler` error handler is used in `@Resolver()`. Error handlers defined in this decorator will be called for all resolver functions defined in the class.
+
+```ts
+@Resolver({
+  // Error handler defined in this function will be called if an error is thrown in any of the resolver functions defined in this class
+  errorHandler: myErrorHandler
+})
+class HelloWorldResolver {
+  // There's no need to add the same error handler in @ResolverFn()
+  @ResolverFn("hello-world")
+  async helloWorld() {
+    // Do whatever this resolver should do
+  }
+
+  // myErrorHandler will also be called if an error is thrown in this resolver function
+  @ResolverFn("get-current-user")
+  async getCurrentUser() {
+    // Return current user
+  }
+}
+```
+
+Last but not least, you can define an error handler in the `getDefinitionsForClass` function. Error handlers defined here will be called if an error is thrown in any of the resolvers that you pass to the `resolvers` array.
+
+```ts
+@Resolver()
+class HelloWorldResolver {
+  @ResolverFn("hello-world")
+  helloWorld(request: Request) {
+    return { message: "Hello world!" };
+  }
+}
+
+@Resolver()
+class UserResolver {
+  @ResolverFn("get-user")
+  getUser(request: Request) {
+    return {...};
+  }
+}
+
+const definitions = getDefinitionsForClass({
+  errorHandler: myErrorHandler,
+  // Error handler will be called if an error is thrown in any of the resolver functions
+  // You don't need to add the myErrorHandler error handler in @Resolver or @ResolverFn decorators
+  resolvers: [HelloWorldResolver, UserResolver]
+});
+```
