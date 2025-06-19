@@ -1,5 +1,67 @@
 **Warning:** The first version of this library is ready, however documentation is still in progress
 
+This library allows you to define resolvers for your Atlassian Forge addon using decorators. It uses the `@forge/resolver` library under the hood to define resolvers, but it provides a more convenient way to define them using decorators.
+
+## Table of contents
+
+- [Introduction](#introduction)
+- [Table of Contents](#table-of-contents)
+- [Installation](#installation)
+- [@Resolver](#resolver)
+- [@ResolverFn](#resolverfn)
+- [getDefinitionsForClass](#getdefinitionsforclass)
+- [Middlewares](#middlewares)
+- [Error handler](#error-handler)
+
+[![npm version](https://badge.fury.io/js/ts-forge.svg)](https://badge.fury.io/js/ts-forge)
+[![npm downloads](https://img.shields.io/npm/dm/ts-forge.svg)](https://www.npmjs.com/package/ts-forge)
+
+## Introduction
+
+This library is designed to make it easier to define resolvers in your Atlassian Forge addon using TypeScript decorators. It allows you to define resolvers, middlewares, and error handlers in a more structured and readable way, while still leveraging the power of the `@forge/resolver` library.
+
+It provides two main decorators: `@Resolver` and `@ResolverFn`, which can be used to define resolvers and their configurations. Additionally, it provides a function `getDefinitionsForClass` to get the definitions of the resolvers you created.
+
+When you create a resolver, you typically would do something like this:
+
+```ts
+import Resolver "@forge/resolver";
+
+const resolver = new Resolver();
+
+resolver.define("hello", async (req) => {
+  try {
+    return { message: "Hello world!" };
+  } catch(error)  {
+    console.error("An error occurred:", error);
+
+    return { status: "error", message: "An error occurred" };
+  }
+});
+
+resolver.define("update-user", async (req) => {
+  try {
+    // Update user logic...
+
+    return { status: "success", message: "User updated successfully" };
+  } catch(error) {
+    console.error("An error occurred:", error);
+
+    return { status: "error", message: "An error occurred" };
+  }
+});
+
+export const definitions = resolver.getDefinitions();
+```
+
+## Installation
+
+This is a Node.js module available on npm. Make sure you have `@forge/resolver` installed as well, since this library uses it under the hood. The minimum version of `@forge/resolver` required is `^1.6.0`.
+
+```bash
+npm install ts-forge
+```
+
 ## @Resolver
 
 ```ts
