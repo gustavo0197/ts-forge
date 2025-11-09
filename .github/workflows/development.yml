@@ -1,0 +1,18 @@
+# This workflow runs tests when code is pushed to the development branch
+
+name: Run tests
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: bash ./scripts/ci/test.sh

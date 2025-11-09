@@ -1,6 +1,6 @@
-# This workflow publishes a stable version of the npm package when a release tag is pushed
+# This workflow publishes a beta version of the npm package when a beta tag is pushed
 
-name: Publish npm package
+name: Publish npm beta package
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
     #   - main
     tags:
       # Publish on version tags like: v1.2.3
-      - v[0-9]+.[0-9]+.[0-9]+
+      - v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+
 
 jobs:
   test:
@@ -20,7 +20,7 @@ jobs:
           node-version: 24
       - run: bash ./scripts/ci/test.sh
 
-  publish:
+  publish-beta:
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -28,4 +28,4 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-      - run: bash ./scripts/ci/npm-publish.sh
+      - run: bash ./scripts/ci/npm-publish-beta.sh
