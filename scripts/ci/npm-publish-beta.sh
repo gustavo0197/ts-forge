@@ -3,13 +3,13 @@
 # echo "GITHUB_REF_TYPE: " $GITHUB_REF_TYPE # branch or tag
 
 # # Install dependencies
-pnpm install
+npm install
 
 # Build the package
-pnpm run build
+npm run build
 
 # Set the npm version based on the GitHub ref name (tag)
-pnpm version $GITHUB_REF_NAME --no-git-tag-version
+npm version $GITHUB_REF_NAME --no-git-tag-version
 
 # Publish the package to npm
-pnpm publish --access public --tag beta
+npm publish --access public --tag beta

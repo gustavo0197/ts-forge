@@ -1,5 +1,5 @@
 # Install project dependencies
-pnpm install
+npm install
 
 # Run tests
-pnpm run test
+npm run test
