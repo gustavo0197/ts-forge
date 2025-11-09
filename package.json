@@ -1,6 +1,6 @@
 {
   "name": "ts-forge",
-  "version": "1.0.1-beta.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "scripts": {
     "test": "vitest --run --coverage",
