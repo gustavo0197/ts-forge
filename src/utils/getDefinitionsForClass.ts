@@ -51,5 +51,5 @@ export function getDefinitionsForClass({
     }
   }
 
-  return forgeResolver.getDefinitions();
+  return forgeResolver.getDefinitions() as DefinitionsHandler;
 }
