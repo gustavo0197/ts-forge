@@ -54,6 +54,34 @@ resolver.define("update-user", async (req) => {
 export const definitions = resolver.getDefinitions();
 ```
 
+With this library, you can achieve the same functionality using decorators, which makes your code more organized and easier to read:
+
+```ts
+import { getDefinitionsForClass, Resolver, ResolverFn } from "ts-forge";
+
+@Resolver()
+class UserResolver {
+  @ResolverFn("hello")
+  async hello(req) {
+    return { message: "Hello world!" };
+  }
+
+  @ResolverFn("update-user")
+  async updateUser(req) {
+    // Update user logic...
+  }
+    return { status: "success", message: "User updated successfully" };
+  }
+}
+
+export const definitions = getDefinitionsForClass({
+  resolvers: [
+    UserResolver
+    // You can add more resolvers here
+  ]
+});
+```
+
 ## Installation
 
 This is a Node.js module available on npm. Make sure you have `@forge/resolver` installed as well, since this library uses it under the hood. The minimum version of `@forge/resolver` required is `^1.6.0`.

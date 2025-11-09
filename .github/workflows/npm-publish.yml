@@ -1,0 +1,29 @@
+name: Publish npm package
+
+on:
+  push:
+    branches:
+      - test
+    tags:
+      # Publish on version tags like: v1.2.3
+      - v[0-9]+.[0-9]+.[0-9]+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: npm install
+      - run: npm run test
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      # - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: bash ./scripts/deploy/npm-publish.sh
