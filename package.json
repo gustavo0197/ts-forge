@@ -1,12 +1,10 @@
 {
   "name": "ts-forge",
-  "version": "1.0.0",
+  "version": "1.0.1-beta.0",
   "main": "dist/index.js",
   "scripts": {
-    "test": "vitest --run",
-    "test:ui": "vitest --ui",
-    "test:watch": "vitest",
-    "test:coverage": "vitest --run --coverage",
+    "test": "vitest --run --coverage",
+    "test:ui": "vitest --ui --coverage",
     "dev": "tsc -p ./tsconfig.json --watch",
     "build": "eval $(rm -r dist) && tsc -p ./tsconfig.json",
     "prepublish": "npm run build"
@@ -27,9 +25,9 @@
     "@forge/resolver": ">=1.6.0 <2.0.0"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "3.1.4",
-    "jsdom": "^26.1.0",
-    "typescript": "5.8.3",
-    "vitest": "^3.1.4"
+    "@vitest/coverage-v8": "4.0.8",
+    "jsdom": "^27.1.0",
+    "typescript": "5.9.3",
+    "vitest": "^4.0.8"
   }
 }

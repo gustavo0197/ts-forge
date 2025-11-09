@@ -1,6 +1,6 @@
 import ForgeResolver from "@forge/resolver";
 import _ from "../constants";
-import { DefinitionsHandler, GetDefinitionsForClassParams, ResolverClassConfig } from "@/types";
+import { DefinitionsHandler, GetDefinitionsForClassParams, ResolverClassConfig } from "../types";
 
 /**
  * Get definitions for the provided resolvers
