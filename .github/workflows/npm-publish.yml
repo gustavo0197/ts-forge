@@ -1,0 +1,33 @@
+# This workflow publishes a stable version of the npm package when a release tag is pushed
+
+name: Publish npm package
+
+on:
+  push:
+    # branches:
+    #   - main
+    tags:
+      # Publish on version tags like: v1.2.3
+      - v[0-9]+.[0-9]+.[0-9]+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: bash ./scripts/ci/test.sh
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: bash ./scripts/ci/npm-publish.sh
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

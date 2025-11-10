@@ -2,8 +2,6 @@ import { defineConfig, ViteUserConfig } from "vitest/config";
 import { resolve } from "path";
 
 export default defineConfig(({ mode }) => {
-  console.log("Vite config mode:", resolve(__dirname, "src"));
-
   const config: ViteUserConfig = {
     mode,
     resolve: {
@@ -11,17 +9,24 @@ export default defineConfig(({ mode }) => {
         "@/index": resolve(__dirname, "src/index"),
         "@/constants": resolve(__dirname, "src/constants"),
         "@/decorators": resolve(__dirname, "src/decorators"),
-        "@/types": resolve(__dirname, "src/types")
+        "@/types": resolve(__dirname, "src/types"),
+        "@/utils": resolve(__dirname, "src/utils")
       }
     },
     test: {
+      open: false,
       globals: true,
       environment: "jsdom",
       coverage: {
         reporter: ["text", "json", "html"],
-        all: true,
         include: ["src/**/*.{ts,tsx}"],
-        exclude: ["src/**/*.test.{ts,tsx}", "src/**/*.spec.{ts,tsx}"]
+        exclude: [
+          "src/**/*.test.{ts,tsx}",
+          "src/**/*.spec.{ts,tsx}",
+          "src/types",
+          "src/constants",
+          "src/index.ts"
+        ]
       }
     }
   };

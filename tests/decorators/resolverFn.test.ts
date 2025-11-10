@@ -4,17 +4,25 @@ import { TargetResolverFnConfig } from "@/types";
 import _ from "@/constants";
 
 const mockError = vi.fn();
+const mockFns = vi.hoisted(() => ({
+  isResolverFnConfig: vi.fn(() => true)
+}));
 
 vi.stubGlobal("console", {
+  ...console,
   error: mockError
 });
 
+vi.mock("../../src/utils/isResolverFnConfig", () => ({ default: mockFns.isResolverFnConfig }));
+
 describe("@Resolver()", () => {
   beforeEach(() => {
-    mockError.mockReset();
+    vi.resetAllMocks();
   });
 
   test("Instance should have resolver function config", () => {
+    mockFns.isResolverFnConfig.mockReturnValue(false);
+
     const resolverKey1 = "testing-resolver";
     const resolverKey2: string = "testing-resolver-2";
     const resolverMethodName1: string = "testMethod";
@@ -119,6 +127,51 @@ describe("@Resolver()", () => {
         methodName: resolverMethodName
       }
     ]);
+  });
+
+  describe("ResolverFn's method", () => {
+    test("If @@resolver__config@@ is not an object it must be assigned to an empty object when calling a method. Method should not throw an error", async () => {
+      mockFns.isResolverFnConfig.mockReturnValue(false);
+
+      @Resolver()
+      class TestResolver {
+        @ResolverFn()
+        async testMethod() {}
+      }
+
+      const instance = new TestResolver();
+
+      // Manually set @@resolver__config@@ to null
+      instance[_.RESOLVER_CONFIG] = null;
+
+      const response = await instance.testMethod.call(instance);
+
+      expect(response).not.toBeInstanceOf(Error);
+      expect(instance[_.RESOLVER_CONFIG]).toEqual(null);
+    });
+
+    test("If middlewares property in resolver's config is not an array, it must be assigned to an empty array when calling a method. Method should not throw an error", async () => {
+      const resolverResponse = "success";
+      const isArraySpy = vi.spyOn(Array, "isArray");
+
+      isArraySpy.mockImplementationOnce(() => true);
+      mockFns.isResolverFnConfig.mockReturnValue(true);
+
+      @Resolver()
+      class TestResolver {
+        @ResolverFn({})
+        async testMethod() {
+          return resolverResponse;
+        }
+      }
+
+      const instance = new TestResolver();
+
+      const response = await instance.testMethod();
+
+      expect(response).not.toBeInstanceOf(Error);
+      expect(response).toBe(resolverResponse);
+    });
   });
 
   describe("Middlewares", () => {

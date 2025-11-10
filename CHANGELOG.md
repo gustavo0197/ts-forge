@@ -3,6 +3,9 @@
 - This version contains changes from the following beta versions:
   - `v1.0.1-beta.0`
   - `v1.0.1-beta.1`
+- Github actions:
+  - workflow to publish stable and beta versions were created
+  - Added a workflow to run tests on development branch
 
 ## v1.0.1-beta.1
 

@@ -41,7 +41,7 @@ export function ResolverFn(resolverFnConfig: ResolverFnConfig | string) {
       try {
         // Merge middlewares from the resolver function and the resolver class
         // Method middlewares are always executed first
-        const middlewares = Array.from(config.middlewares || []);
+        const middlewares = Array.from(config?.middlewares || []);
 
         // If there are middlewares defined in the resolver class, add them to the middlewares array
         if (Array.isArray(targetConfig.middlewares)) {
