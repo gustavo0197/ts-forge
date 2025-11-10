@@ -2,7 +2,9 @@
 tsconfig.json
 vitest.config.ts
 
+.github
 src
 tests
 node_modules
 coverage
+scripts

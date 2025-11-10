@@ -1,3 +1,7 @@
+## v1.0.2
+
+- Files in the .github and scripts folders were added to .npmignore to avoid publishing them to npm registry
+
 ## v1.0.1
 
 - This version contains changes from the following beta versions:
