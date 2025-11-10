@@ -212,4 +212,57 @@ describe("getDefinitionsForClass()", () => {
     expect(middleware1).toHaveBeenCalledTimes(1);
     expect(middleware2).toHaveBeenCalledTimes(1);
   });
+
+  test("If resolver config's middlewares is not provided, it should use a default empty array", () => {
+    @Resolver()
+    class TestingResolver {
+      @ResolverFn("testFunction")
+      async testFunction() {
+        return { message: "Hello, World!" };
+      }
+    }
+
+    const testResolver = new TestingResolver();
+
+    testResolver[_.RESOLVER_CONFIG].middlewares = undefined;
+
+    const config: ResolverClassConfig = testResolver[_.RESOLVER_CONFIG];
+
+    // Should have a default empty array for middlewares
+
+    expect(config).toEqual({
+      middlewares: undefined,
+      errorHandler: undefined
+    });
+
+    getDefinitionsForClass({ resolvers: [testResolver] });
+
+    expect(testResolver[_.RESOLVER_CONFIG]).toEqual({
+      globalMiddlewares: [],
+      middlewares: [],
+      errorHandler: undefined,
+      globalErrorHandler: undefined
+    });
+  });
+
+  test("If resolver config is not provided, it should not throw an error", () => {
+    @Resolver()
+    class TestingResolver {
+      @ResolverFn("testFunction")
+      async testFunction() {
+        return { message: "Hello, World!" };
+      }
+    }
+
+    const testResolver = new TestingResolver();
+
+    // Delete the resolver config
+    testResolver[_.RESOLVER_CONFIG] = undefined;
+
+    const fn = () => {
+      getDefinitionsForClass({ resolvers: [testResolver] });
+    };
+
+    expect(fn).not.toThrow();
+  });
 });

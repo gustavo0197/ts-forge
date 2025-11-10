@@ -9,10 +9,12 @@ export default defineConfig(({ mode }) => {
         "@/index": resolve(__dirname, "src/index"),
         "@/constants": resolve(__dirname, "src/constants"),
         "@/decorators": resolve(__dirname, "src/decorators"),
-        "@/types": resolve(__dirname, "src/types")
+        "@/types": resolve(__dirname, "src/types"),
+        "@/utils": resolve(__dirname, "src/utils")
       }
     },
     test: {
+      open: false,
       globals: true,
       environment: "jsdom",
       coverage: {
