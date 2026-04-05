@@ -1,8 +1,5 @@
 # ts-forge
 
-[npm version](https://badge.fury.io/js/ts-forge)
-[npm downloads](https://www.npmjs.com/package/ts-forge)
-
 This library allows you to define resolvers for your Atlassian Forge addon using decorators. It uses the `@forge/resolver` library under the hood to define resolvers, but it provides a more convenient way to define them using decorators.
 
 ## Table of contents
