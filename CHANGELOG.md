@@ -1,3 +1,7 @@
+## 2.0.1
+
+- README.md: updated documentation
+
 ## v2.0.0-beta.0
 
 - Resolved warnings from TypeScript 6.0
