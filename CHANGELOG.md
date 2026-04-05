@@ -1,3 +1,9 @@
+## v1.0.3
+
+- README.md: updated documentation
+- Keywords were added to package.json
+- Fixed vulnerabilities in package.json
+
 ## v1.0.2
 
 - Files in the .github and scripts folders were added to .npmignore to avoid publishing them to npm registry
