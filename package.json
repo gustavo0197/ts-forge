@@ -1,6 +1,6 @@
 {
   "name": "ts-forge",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "main": "dist/index.js",
   "scripts": {
     "test": "vitest --run --coverage",
@@ -16,7 +16,9 @@
   "keywords": [
     "forge",
     "atlassian",
-    "addon"
+    "addon",
+    "ts-forge",
+    "resolvers"
   ],
   "author": "Gustavo Velazquez",
   "license": "ISC",
