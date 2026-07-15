@@ -24,7 +24,7 @@
   "license": "ISC",
   "description": "Decorators for creating resolvers in Atlassian's Forge addons",
   "peerDependencies": {
-    "@forge/resolver": ">=1.6.0 <2.0.0"
+    "@forge/resolver": ">=1.6.0 <3.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
