@@ -1,3 +1,20 @@
+## v2.1.0
+
+- Compatibility with @forge/resolver 2.x
+- All changes from the following beta versions:
+  - `v2.1.0-beta.0`
+
+## v2.1.0-beta.0
+
+- Build optimization: Added code minification using terser
+- The npm package now includes only the minified JavaScript file (`index.min.js`) and TypeScript declarations
+- Created `scripts/build.sh` to organize and simplify the build process
+- Enabled `removeComments` option in tsconfig.json to reduce output size
+- Updated package.json:
+  - Added `files` field to control published content
+  - Main entry point now references the minified file
+  - Added explicit `types` field for TypeScript support
+
 ## 2.0.1
 
 - README.md: updated documentation
