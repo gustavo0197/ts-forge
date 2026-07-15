@@ -1,3 +1,8 @@
+## v2.2.0
+
+- Fixed broken single-file build: terser was concatenating modules without resolving imports, which caused `Identifier 'r' has already been declared` when Forge webpack bundled the package
+- Build now uses esbuild to produce a real ESM bundle (`@forge/resolver` remains external as a peer dependency)
+
 ## v2.1.0
 
 - Compatibility with @forge/resolver 2.x
