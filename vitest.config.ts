@@ -4,13 +4,6 @@ import { resolve } from "path";
 export default defineConfig(({ mode }) => {
   const config: ViteUserConfig = {
     mode,
-    esbuild: {
-      tsconfigRaw: {
-        compilerOptions: {
-          experimentalDecorators: true
-        }
-      }
-    },
     resolve: {
       alias: {
         "@/index": resolve(__dirname, "src/index"),
